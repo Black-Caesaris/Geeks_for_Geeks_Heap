@@ -1,0 +1,149 @@
+class MinHeap{
+public:
+	int *arr;
+	int size;
+	int capacity;
+
+	int parent(int i){
+		//formula for parent
+		return (i - 1)/2;
+	}
+	int lchild(int i){
+		//formula for left child
+		return(2*i - 1)/2;
+	}
+
+	int rchild(int i){
+		//formula for rchild
+		return(2*i + 1)/2;
+	}
+
+	MinHeap(int i){
+		capacity = i;
+		size = 0;
+		arr = new int[capacity];
+	}
+
+	void MinHeapify(int);
+
+	int extractMin();
+
+	int getMin(){
+		return arr[0];
+	}
+
+	bool deleteKey(int i);
+
+	bool decreaseKey(int key, int new_value);
+
+	bool insertKey(int key) ;
+
+	void swap(int *, int*);
+};
+
+void MinHeap::MinHeapify(int i){
+
+	if(i >= size){
+		cout<<"Enter proper index of the tree";
+		return ;
+	}
+	int left = lchild(i);
+	int right = rchild(i);
+	int smallest  = i;
+	if(arr[left] < arr[i]){
+		smallest = left;
+	}
+
+	if(arr[right] < arr[i]){
+		smallest = right;
+	}
+	
+	if(smallest!=i){
+	swap(arr[i], arr[smallest]);
+	MinHeapify(smallest);
+	}
+
+}
+
+//function to insert a new key to the heap...
+bool MinHeap::insertKey(int key){
+
+	//insert element at the last index of array..
+	if(size>=capacity)
+	{
+		cout<<"Full heap already..";
+		return false;
+	}
+	size++;
+	arr[size - 1] = key;
+	i = size - 1;
+	while(i!=0 && parent(i) > arr[i]){
+		swap(&arr[parent(i)],&arr[i]);
+		i = parent(i);
+	}
+
+	return true;
+
+
+
+}
+
+bool MinHeap::decreaseKey(int i, int new_val)
+{
+	if(i > size - 1)
+	{
+		cout<<"Enter correct index";
+		return false;
+	}
+	else{
+		arr[i] = new_val;
+
+		while(i!=0 && prent(i) > arr[i])
+		{
+			swap(&arr[parent(i)] , &arr[i]);
+			i = parent(i);
+		}
+		return true;
+	}
+}
+
+int extractMin(){
+
+	if(size<=0){
+		return INT_MAX;
+	}
+
+	else if(size == 1){
+
+		size--;
+		return arr[0];
+
+	}
+
+	else{
+
+		int minimum = arr[0];
+		arr[0] = arr[size - 1];
+		size--;
+		MinHeapify(0);
+
+		return minimum;
+
+		}
+}
+
+//first decrease the key to the lowest possible value, so that it becomes the root, then remove it from the heap..
+void MinHeap::deleteKey(int key){
+
+	decreaseKey(key, INT_MIN);
+	extractMin();
+}
+
+void swap(int *x, int *y)
+{
+	int temp = *x;
+	*x = *y;
+	*y = temp;
+}
+
+
